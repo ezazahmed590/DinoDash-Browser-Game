@@ -42,10 +42,10 @@ CLOUD_LEVEL = ROAD_POSITION - DINO_HEIGHT - 2 * JUMP_HEIGHT - CLOUD_HEIGHT
 MAX_RANGE_CLOUD = 0.2 * CANVAS_WIDTH
 
 # ---- Score variables ----
-SCORE_X = 450
+SCORE_X = 370
 SCORE_Y = 30
-SCR_HEIGHT = 60
-SCR_WIDTH = 280
+SCR_HEIGHT = 70
+SCR_WIDTH = 400
 
 # ---- "Game Over" variables ----
 GAME_OVER_X = 30
@@ -181,7 +181,7 @@ def main():
                 cloud_6 = create_cloud(canvas, CLOUD_HEIGHT, cloud_3_position, CLOUD_LEVEL)
 
                 # score bg stays in front of the clouds, so the clouds don't mess (visually) with the scorecard.
-                canvas.create_rectangle(SCORE_X, SCORE_Y, SCORE_X + SCR_WIDTH, SCORE_Y + SCR_HEIGHT, "white")
+                canvas.create_rectangle(SCORE_X, SCORE_Y, (SCORE_X + SCR_WIDTH), (SCORE_Y + SCR_HEIGHT), "white")
                 score_shape = create_scorecard(canvas, SCORE_X, SCORE_Y, f"SCORE: {score:06}", 40, "black")
                 ##
 

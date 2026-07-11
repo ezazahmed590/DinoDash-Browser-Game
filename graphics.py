@@ -812,8 +812,13 @@ def _compat_create_rectangle(self, x1, y1, x2, y2, color="black", outline=None, 
 
 
 def _compat_create_text(self, x, y, text, font="Times New Roman", size=13, color="black",
-                        anchor="center", *args, **kwargs):
-    """Newer signature: create_text(x, y, text, font, size, color)."""
+                        anchor="nw", *args, **kwargs):
+    """
+    Newer signature: create_text(x, y, text, font, size, color).
+    anchor defaults to "nw" (northwest) so that (x, y) is the TOP-LEFT corner of
+    the text, matching how the game positions its scorecard. (Tkinter's own
+    default is "center", which would shift text up-and-left of where you expect.)
+    """
     return tkinter.Canvas.create_text(
         self, x, y, text=text, font=(font, size), fill=color, anchor=anchor,
         *args, **kwargs)
