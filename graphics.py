@@ -793,3 +793,49 @@ class Canvas(tkinter.Canvas):
         # this introduces a memory leak which can be fixed by overloading delete
         self._image_gb_protection[img_obj] = image
         return img_obj
+
+
+# ============================================================================
+#  COMPATIBILITY SHIM
+#  Makes this 2020 graphics.py work with a game written against a newer Code in
+#  Place API. We patch methods directly onto the existing Canvas class rather
+#  than subclassing, because the class body uses super(Canvas, self) calls
+#  internally and rebinding the name "Canvas" would break them.
+# ============================================================================
+
+def _compat_create_rectangle(self, x1, y1, x2, y2, color="black", outline=None, *args, **kwargs):
+    """Accept a 2nd positional color (outline), like the newer API."""
+    if outline is None:
+        outline = color
+    return tkinter.Canvas.create_rectangle(
+        self, x1, y1, x2, y2, fill=color, outline=outline, *args, **kwargs)
+
+
+def _compat_create_text(self, x, y, text, font="Times New Roman", size=13, color="black",
+                        anchor="center", *args, **kwargs):
+    """Newer signature: create_text(x, y, text, font, size, color)."""
+    return tkinter.Canvas.create_text(
+        self, x, y, text=text, font=(font, size), fill=color, anchor=anchor,
+        *args, **kwargs)
+
+
+def _compat_change_text(self, obj, text):
+    """Renamed from set_text in the newer API."""
+    self.itemconfig(obj, text=text)
+
+
+def _compat_get_last_key_press(self):
+    """
+    Newer API: returns the most recent key press as an uppercase string like
+    "SPACE" (or None if nothing new), built on get_new_key_presses().
+    """
+    presses = self.get_new_key_presses()
+    if not presses:
+        return None
+    return presses[-1].keysym.upper()     # "space" -> "SPACE"
+
+
+Canvas.create_rectangle = _compat_create_rectangle
+Canvas.create_text = _compat_create_text
+Canvas.change_text = _compat_change_text
+Canvas.get_last_key_press = _compat_get_last_key_press
