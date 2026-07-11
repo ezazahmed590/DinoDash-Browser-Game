@@ -61,6 +61,15 @@ def main():
 
     # ---------- SETUP: canvas & dino ----------
     canvas = Canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+
+    # Give the window keyboard focus so SPACE presses register when running
+    # locally. (Harmless on the Code in Place IDE.) If this line ever errors on
+    # your setup, delete it and just click the game window once before playing.
+    try:
+        canvas.focus_set()
+    except Exception:
+        pass
+
     dino = create_dinosaur(canvas, DINO_HEIGHT, dino_position_x, ROAD_POSITION - DINO_HEIGHT - 1)
 
     # ---------- SETUP: road ----------
@@ -113,6 +122,11 @@ def main():
     last_bg_update = time.time()
     last_jump_update = time.time()
     FRAME_TIME = min(BG_MVT_SPEED, JUMP_TIME)
+
+    # Paint the first frame and pause briefly so you can see the starting scene
+    # and click the window / get ready before the action begins.
+    canvas.update()
+    time.sleep(1)
 
     # ---------- GAME LOOP ----------
     while True:
@@ -290,6 +304,11 @@ def main():
             break
         else:
             canvas.change_text(score_shape, f"SCORE: {score:06}")
+
+        # Repaint the window so all the movement above becomes visible. Without
+        # this, the canvas stays blank when running locally (the Code in Place
+        # IDE refreshes automatically, but a plain Tkinter window does not).
+        canvas.update()
 
 if __name__ == '__main__':
     main()
